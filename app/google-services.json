@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "426622127192",
+    "project_id": "demoapp-345ba",
+    "storage_bucket": "demoapp-345ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:426622127192:android:d54aeb086dadbbb1a50e2d",
+        "android_client_info": {
+          "package_name": "com.ipsMeet.firebasedemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "426622127192-vcbc6selgoc6cb4eqk3ofi655k8ouhlm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBThiULo9clczgXymrNLFzg2gL1vC3OSIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "426622127192-vcbc6selgoc6cb4eqk3ofi655k8ouhlm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
