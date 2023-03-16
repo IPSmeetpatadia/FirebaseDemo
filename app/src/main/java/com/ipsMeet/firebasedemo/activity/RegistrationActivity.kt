@@ -47,6 +47,11 @@ class RegistrationActivity : AppCompatActivity() {
                 }
             }
         }
+
+        reg_txt_login.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun saveUser() {
@@ -59,6 +64,4 @@ class RegistrationActivity : AppCompatActivity() {
         val userID = FirebaseAuth.getInstance().currentUser!!.uid
         database.child("User").child(userID).setValue(addUser)
     }
-
-
 }

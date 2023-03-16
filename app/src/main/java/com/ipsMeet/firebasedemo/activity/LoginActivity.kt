@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
@@ -25,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
         auth = Firebase.auth
         database = Firebase.database.reference
 
-        txt_reg.setOnClickListener {
+        login_txt_reg.setOnClickListener {
             val intent = Intent(this, RegistrationActivity::class.java)
             startActivity(intent)
         }
@@ -34,23 +35,27 @@ class LoginActivity : AppCompatActivity() {
             val email = login_edtxt_email.text.toString()
             val pass = login_edtxt_password.text.toString()
 
-            auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this) {
+            auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this) {
                 if (it.isSuccessful) {
-                    auth.currentUser?.sendEmailVerification()
-                        ?.addOnSuccessListener {
-                            val user = auth.currentUser
-                            val intent = Intent(this, HomeActivity::class.java)
-                                .putExtra("data", user)
-                            startActivity(intent)
-                        }
-                        ?.addOnFailureListener {
-                            Log.d("FAIL!!", it.toString())
-                        }
-                }
-                else {
+                    val user = auth.currentUser
+                    updaetUI(user)
+                } else {
                     Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    private fun updaetUI(user: FirebaseUser?) {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val signedInUser = auth.currentUser
+        if (signedInUser != null) {
+            updaetUI(signedInUser)
         }
     }
 }

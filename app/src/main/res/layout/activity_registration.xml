@@ -32,7 +32,7 @@
         android:id="@+id/reg_edtxt_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter your e-mail"/>
+        android:hint="Enter your password"/>
 
     <Button
         android:id="@+id/btnReg"
@@ -41,5 +41,12 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
         android:text="Submit"/>
+
+    <TextView
+        android:id="@+id/reg_txt_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Already a user? Login here"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
