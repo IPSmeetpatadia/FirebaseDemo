@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.ktx.Firebase
 import com.ipsMeet.firebasedemo.R
 import com.ipsMeet.firebasedemo.adapter.ListAdapter
@@ -20,6 +21,7 @@ class ListFragment : Fragment() {
 
     private lateinit var popupView: View
     private var listData = arrayListOf<ListDataClass>()
+    var listIndex: Int = 0
 
     private lateinit var database: DatabaseReference
     private var dbRef = FirebaseDatabase.getInstance()
@@ -89,6 +91,10 @@ class ListFragment : Fragment() {
                 alertDialog.show()
 
                 popupView.btnSaveData.setOnClickListener {
+
+                    listIndex++
+                    Log.d("Field Value", FieldValue.increment(1).toString())
+
                     val list = ListDataClass(
                         popupView.addList_edtxt_name.text.toString(),
                         popupView.addList_edtxt_organization.text.toString(),
@@ -98,7 +104,7 @@ class ListFragment : Fragment() {
                         0)
 
                     val userID = FirebaseAuth.getInstance().currentUser!!.uid
-                    dbRef.getReference("User/$userID").child("list data").setValue(list)
+                    dbRef.getReference("User/$userID").child("list data").child(listIndex.toString()).setValue(list)
                     alertDialog.dismiss()
                 }
 
