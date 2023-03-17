@@ -21,7 +21,7 @@ class ListFragment : Fragment() {
 
     private lateinit var popupView: View
     private var listData = arrayListOf<ListDataClass>()
-    var listIndex: Int = 0
+    private var listIndex: Int = 0
 
     private lateinit var database: DatabaseReference
     private var dbRef = FirebaseDatabase.getInstance()
@@ -38,20 +38,20 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         recycler_fragment_list.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-
 
         database = Firebase.database.reference
 
-        val dbRef = FirebaseDatabase.getInstance().getReference("list data")
+        val userID = FirebaseAuth.getInstance().currentUser!!.uid
+        val dbRef = FirebaseDatabase.getInstance().getReference("User/$userID/list data")
+
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     for (item in snapshot.children) {
                         val listedData = item.getValue(ListDataClass::class.java)
                         listData.add(listedData!!)
-                        recycler_fragment_list.adapter = ListAdapter(requireContext(), listData)
+                        recycler_fragment_list.adapter = ListAdapter(context!!.applicationContext, listData)
                     }
                 }
             }
@@ -61,17 +61,6 @@ class ListFragment : Fragment() {
             }
         })
         Log.d("listdata", listData.toString())
-
-        /*
-        database.child("User").child(userID).child("list data").get()
-            .addOnSuccessListener {
-                val name = it.child("name").value.toString()
-                val organization = it.child("organization").value.toString()
-                val totalPurchase = it.child("totalPurchase").value.toString()
-                sendData.add(SendToListDataClass(name, organization, totalPurchase))
-            }
-         */
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -91,10 +80,8 @@ class ListFragment : Fragment() {
                 alertDialog.show()
 
                 popupView.btnSaveData.setOnClickListener {
-
-                    listIndex++
+                    listData.clear()
                     Log.d("Field Value", FieldValue.increment(1).toString())
-
                     val list = ListDataClass(
                         popupView.addList_edtxt_name.text.toString(),
                         popupView.addList_edtxt_organization.text.toString(),
@@ -105,6 +92,7 @@ class ListFragment : Fragment() {
 
                     val userID = FirebaseAuth.getInstance().currentUser!!.uid
                     dbRef.getReference("User/$userID").child("list data").child(listIndex.toString()).setValue(list)
+                    listIndex += 1
                     alertDialog.dismiss()
                 }
 
