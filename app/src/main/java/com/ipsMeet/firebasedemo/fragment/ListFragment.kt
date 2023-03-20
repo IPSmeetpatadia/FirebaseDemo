@@ -4,12 +4,12 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.ktx.Firebase
 import com.ipsMeet.firebasedemo.R
 import com.ipsMeet.firebasedemo.adapter.ListAdapter
@@ -38,6 +38,7 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        registerForContextMenu(recycler_fragment_list)
         recycler_fragment_list.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         database = Firebase.database.reference
@@ -80,8 +81,9 @@ class ListFragment : Fragment() {
                 alertDialog.show()
 
                 popupView.btnSaveData.setOnClickListener {
+                    val userID = FirebaseAuth.getInstance().currentUser!!.uid
+
                     listData.clear()
-                    Log.d("Field Value", FieldValue.increment(1).toString())
                     val list = ListDataClass(
                         popupView.addList_edtxt_name.text.toString(),
                         popupView.addList_edtxt_organization.text.toString(),
@@ -90,9 +92,7 @@ class ListFragment : Fragment() {
                         popupView.addList_edtxt_phone.text.toString(),
                         0)
 
-                    val userID = FirebaseAuth.getInstance().currentUser!!.uid
-                    dbRef.getReference("User/$userID").child("list data").child(listIndex.toString()).setValue(list)
-                    listIndex += 1
+                    dbRef.getReference("User/$userID").child("list data").push().setValue(list)
                     alertDialog.dismiss()
                 }
 
@@ -102,5 +102,21 @@ class ListFragment : Fragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+
+        val menuInflater = activity?.menuInflater
+        menuInflater?.inflate(R.menu.menu_long_press, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.menu_delete_item -> {
+                Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
+            }
+        }
+        return super.onContextItemSelected(item)
     }
 }

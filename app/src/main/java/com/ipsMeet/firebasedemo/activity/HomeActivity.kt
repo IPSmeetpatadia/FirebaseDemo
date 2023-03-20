@@ -1,10 +1,13 @@
 package com.ipsMeet.firebasedemo.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -17,11 +20,15 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
 
+    private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
+
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
+        title = "Home"
+        auth = FirebaseAuth.getInstance()
         database = Firebase.database.reference
 
         val userID = FirebaseAuth.getInstance().currentUser!!.uid
@@ -35,7 +42,17 @@ class HomeActivity : AppCompatActivity() {
             }
 
         home_btnGetList.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(R.id.home_layout, ListFragment()).addToBackStack(null).commit()
+
+            val frameLayout = FrameLayout(this)
+            frameLayout.layoutParams =
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+            frameLayout.id = (R.id.home_layout)
+            setContentView(frameLayout)
+            supportFragmentManager.beginTransaction().replace(R.id.home_layout, ListFragment()).addToBackStack("Home")
+                .commit()
         }
     }
 
