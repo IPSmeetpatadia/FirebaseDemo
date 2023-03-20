@@ -32,7 +32,7 @@ class ListAdapter(private val context: Context, private val listData: List<ListD
             name.text = listData[position].name
             organization.text = listData[position].organization
             totalPurchase.text = listData[position].totalPurchase.toString()
-            itemView.isLongClickable = true
+            itemView.isLongClickable = true;
         }
     }
 }

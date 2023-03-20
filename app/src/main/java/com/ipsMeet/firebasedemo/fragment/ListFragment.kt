@@ -10,12 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.ktx.Firebase
 import com.ipsMeet.firebasedemo.R
 import com.ipsMeet.firebasedemo.adapter.ListAdapter
 import com.ipsMeet.firebasedemo.dataclass.ListDataClass
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.popup_add_list.view.*
+
 
 class ListFragment : Fragment() {
 
@@ -81,9 +83,8 @@ class ListFragment : Fragment() {
                 alertDialog.show()
 
                 popupView.btnSaveData.setOnClickListener {
-                    val userID = FirebaseAuth.getInstance().currentUser!!.uid
-
                     listData.clear()
+                    Log.d("Field Value", FieldValue.increment(1).toString())
                     val list = ListDataClass(
                         popupView.addList_edtxt_name.text.toString(),
                         popupView.addList_edtxt_organization.text.toString(),
@@ -92,7 +93,10 @@ class ListFragment : Fragment() {
                         popupView.addList_edtxt_phone.text.toString(),
                         0)
 
-                    dbRef.getReference("User/$userID").child("list data").push().setValue(list)
+                    val userID = FirebaseAuth.getInstance().currentUser!!.uid
+                    val key = database.child("list data").push().key.toString()
+
+                    dbRef.getReference("User/$userID").child("list data").child(key).setValue(list)
                     alertDialog.dismiss()
                 }
 
@@ -104,11 +108,10 @@ class ListFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo? ) {
         super.onCreateContextMenu(menu, v, menuInfo)
-
-        val menuInflater = activity?.menuInflater
-        menuInflater?.inflate(R.menu.menu_long_press, menu)
+        val menuInflater = requireActivity().menuInflater
+        menuInflater.inflate(R.menu.menu_long_press, menu)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
