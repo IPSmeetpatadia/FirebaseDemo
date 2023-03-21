@@ -16,13 +16,14 @@ import com.google.firebase.ktx.Firebase
 import com.ipsMeet.firebasedemo.R
 import com.ipsMeet.firebasedemo.adapter.ListAdapter
 import com.ipsMeet.firebasedemo.dataclass.ListDataClass
+import com.ipsMeet.firebasedemo.dataclass.ViewListDataClass
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.popup_add_list.view.*
 
 class ListFragment : Fragment() {
 
     private lateinit var popupView: View
-    private var listData = arrayListOf<ListDataClass>()
+    private var listData = arrayListOf<ViewListDataClass>()
     var key = ""
 
     private lateinit var database: DatabaseReference
@@ -52,9 +53,15 @@ class ListFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     for (item in snapshot.children) {
-                        val listedData = item.getValue(ListDataClass::class.java)
+                        val listedData = item.getValue(ViewListDataClass::class.java)
+                        listedData?.key = item.key.toString()
                         listData.add(listedData!!)
-                        recycler_fragment_list.adapter = ListAdapter(context!!.applicationContext, listData)
+                        recycler_fragment_list.adapter = ListAdapter(context!!.applicationContext, listData,
+                        object : ListAdapter.OnItemClick{
+                            override fun onClick(listDataClass: String) {
+                                key = listDataClass
+                            }
+                        })
                     }
                 }
             }
@@ -117,9 +124,8 @@ class ListFragment : Fragment() {
         when(item.itemId) {
             R.id.menu_delete_item -> {
                 val userID = FirebaseAuth.getInstance().currentUser!!.uid
-                val dbRef = FirebaseDatabase.getInstance().getReference("User/$userID/list data")
-                val queryRef = dbRef.child(Constants.DATA)
-
+                FirebaseDatabase.getInstance().getReference("User/$userID/list data").child(key).removeValue()
+                listData.clear()
                 Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
             }
         }

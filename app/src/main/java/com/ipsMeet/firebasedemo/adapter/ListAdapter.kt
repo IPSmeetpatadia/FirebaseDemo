@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ipsMeet.firebasedemo.R
-import com.ipsMeet.firebasedemo.dataclass.ListDataClass
+import com.ipsMeet.firebasedemo.dataclass.ViewListDataClass
 import kotlinx.android.synthetic.main.single_view_list.view.*
 
-class ListAdapter(private val context: Context, private val listData: List<ListDataClass>) :
+class ListAdapter(private val context: Context, private val listData: List<ViewListDataClass>, private val onItemClick: OnItemClick) :
     RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
     class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,6 +34,15 @@ class ListAdapter(private val context: Context, private val listData: List<ListD
             organization.text = listData[position].organization
             totalPurchase.text = listData[position].totalPurchase.toString()
             itemView.isLongClickable = true
+
+            itemView.setOnLongClickListener {
+                onItemClick.onClick(listData[position].key)
+                false
+            }
         }
+    }
+
+    interface OnItemClick {
+        fun onClick(listDataClass: String)
     }
 }
