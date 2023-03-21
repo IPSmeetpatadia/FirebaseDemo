@@ -10,12 +10,13 @@ import com.ipsMeet.firebasedemo.R
 import com.ipsMeet.firebasedemo.dataclass.ListDataClass
 import kotlinx.android.synthetic.main.single_view_list.view.*
 
-class ListAdapter(private val context: Context, private val listData: List<ListDataClass>): RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
+class ListAdapter(private val context: Context, private val listData: List<ListDataClass>) :
+    RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
-    class ListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val name: TextView = itemView.singleView_list_name
-        val organization: TextView = itemView.singleView_list_company
-        val totalPurchase: TextView = itemView.singleView_list_totalPurchase
+    class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            val name: TextView = itemView.singleView_list_name
+            val organization: TextView = itemView.singleView_list_company
+            val totalPurchase: TextView = itemView.singleView_list_totalPurchase
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
@@ -32,7 +33,7 @@ class ListAdapter(private val context: Context, private val listData: List<ListD
             name.text = listData[position].name
             organization.text = listData[position].organization
             totalPurchase.text = listData[position].totalPurchase.toString()
-            itemView.isLongClickable = true;
+            itemView.isLongClickable = true
         }
     }
 }

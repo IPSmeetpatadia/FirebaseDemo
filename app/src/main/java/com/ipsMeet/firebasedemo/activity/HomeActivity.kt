@@ -42,7 +42,8 @@ class HomeActivity : AppCompatActivity() {
             }
 
         home_btnGetList.setOnClickListener {
-
+            supportFragmentManager.beginTransaction().replace(R.id.home_layout, ListFragment()).addToBackStack("Home").commit()
+            /*
             val frameLayout = FrameLayout(this)
             frameLayout.layoutParams =
                 ViewGroup.LayoutParams(
@@ -53,6 +54,8 @@ class HomeActivity : AppCompatActivity() {
             setContentView(frameLayout)
             supportFragmentManager.beginTransaction().replace(R.id.home_layout, ListFragment()).addToBackStack("Home")
                 .commit()
+
+ */
         }
     }
 
@@ -71,4 +74,6 @@ class HomeActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 }
