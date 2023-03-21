@@ -2,7 +2,6 @@ package com.ipsMeet.firebasedemo.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.provider.SyncStateContract.Constants
 import android.util.Log
 import android.view.*
 import android.widget.Toast
