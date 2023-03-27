@@ -121,6 +121,9 @@ class ListFragment : Fragment() {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
+            R.id.menu_total_count -> {
+
+            }
             R.id.menu_delete_item -> {
                 val userID = FirebaseAuth.getInstance().currentUser!!.uid
                 FirebaseDatabase.getInstance().getReference("User/$userID/list data").child(key).removeValue()

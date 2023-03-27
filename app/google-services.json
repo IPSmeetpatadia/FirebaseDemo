@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "426622127192",
+    "firebase_url": "https://demoapp-345ba-default-rtdb.firebaseio.com",
     "project_id": "demoapp-345ba",
     "storage_bucket": "demoapp-345ba.appspot.com"
   },
@@ -14,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "426622127192-vcbc6selgoc6cb4eqk3ofi655k8ouhlm.apps.googleusercontent.com",
+          "client_id": "426622127192-uv5fvpc6m02bmgkih63mel29hcikekrg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ipsMeet.firebasedemo",
+            "certificate_hash": "9bbc97b94e2ae1c6d871aeab0a81ed5d815a0400"
+          }
+        },
+        {
+          "client_id": "426622127192-pmvd9smokbls1vh8mk875sluqstep603.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "426622127192-vcbc6selgoc6cb4eqk3ofi655k8ouhlm.apps.googleusercontent.com",
+              "client_id": "426622127192-pmvd9smokbls1vh8mk875sluqstep603.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
