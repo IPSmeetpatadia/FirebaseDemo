@@ -31,6 +31,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        supportActionBar?.hide()
+
         login_txt_reg.setOnClickListener {
             val intent = Intent(this, RegistrationActivity::class.java)
             startActivity(intent)
@@ -100,7 +102,8 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
             }
-        } else {
+        }
+        else {
             Log.d("TASK FAIL", task.exception.toString())
             Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT).show()
         }

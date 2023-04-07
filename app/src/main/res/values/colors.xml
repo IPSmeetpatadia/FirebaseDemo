@@ -7,4 +7,13 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="dark_cyan">#005f6d</color>
+    <color name="steel_blue">#008AA2</color>
+    <color name="cyan">#00a3bb</color>
+    <color name="robin_egg_blue">#00BCD4</color>
+    <color name="blur_robin_egg_blue">#3400BCD4</color>
+    <color name="blur2_robin_egg_blue">#1700BCD4</color>
+    <color name="magenta">#bb1800</color>
+
 </resources>

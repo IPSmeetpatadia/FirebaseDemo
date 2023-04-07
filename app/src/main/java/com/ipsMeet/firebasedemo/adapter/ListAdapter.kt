@@ -10,8 +10,8 @@ import com.ipsMeet.firebasedemo.R
 import com.ipsMeet.firebasedemo.dataclass.ViewListDataClass
 import kotlinx.android.synthetic.main.single_view_list.view.*
 
-class ListAdapter(private val context: Context, private val listData: List<ViewListDataClass>, private val onItemClick: OnItemClick) :
-    RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
+class ListAdapter(private val context: Context, private val listData: List<ViewListDataClass>, private val onItemClick: OnItemClick)
+    : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
     class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val name: TextView = itemView.singleView_list_name
