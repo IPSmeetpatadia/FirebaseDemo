@@ -18,8 +18,15 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.ipsMeet.firebasedemo.R
+import com.ipsMeet.firebasedemo.adapter.PdfAdapter
+import com.ipsMeet.firebasedemo.dataclass.UploadPdfDataClass
+import com.ipsMeet.firebasedemo.dataclass.ViewPdfDataClass
 import kotlinx.android.synthetic.main.popup_pdf_list.view.*
 import java.util.*
 
@@ -27,11 +34,19 @@ import java.util.*
 class DocumentListFragment : Fragment() {
 
     private lateinit var popupView: View
-    lateinit var alertDialog: AlertDialog
-    lateinit var pdfURI: Uri
+    private lateinit var alertDialog: AlertDialog
+    private lateinit var pdfURI: Uri
+
+    lateinit var recyclerView: RecyclerView
+
+    private var listData = arrayListOf<ViewPdfDataClass>()
+    private lateinit var database: DatabaseReference
+    private var dbRef = FirebaseDatabase.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        database = Firebase.database.reference
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,8 +57,33 @@ class DocumentListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.document_recyclerView)
+        recyclerView = view.findViewById(R.id.document_recyclerView)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+
+        val userID = FirebaseAuth.getInstance().currentUser!!.uid
+        val dbRef = FirebaseDatabase.getInstance().getReference("User/$userID/pdf data")
+
+        dbRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    for (item in snapshot.children) {
+                        Log.d("snapshot", snapshot.children.toString())
+                        val listedData = item.getValue(ViewPdfDataClass::class.java)
+                        listedData?.key = item.key.toString()
+                        listData.add(listedData!!)
+                        Log.d("listData", listData.toString())
+                        Log.d("listedData", listedData.toString())
+                        recyclerView.adapter = PdfAdapter(context!!.applicationContext, listData)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("Error", error.toString())
+            }
+        })
+
+
 
         view.findViewById<FloatingActionButton>(R.id.btn_uploadPDF).setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
@@ -90,7 +130,7 @@ class DocumentListFragment : Fragment() {
             val cursor = requireActivity().contentResolver.query(pdfURI, null, null, null, null)
             cursor.use { cursor ->
                 if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                 }
             }
         }
@@ -104,7 +144,18 @@ class DocumentListFragment : Fragment() {
         popupView.pdf_name.setText(result.toString())
 
         popupView.btnUploadPdf.setOnClickListener {
+            listData.clear()
             uploadPDF(result!!)
+
+            val pdf = UploadPdfDataClass(
+                fileName = result.toString(),
+                pdf = pdfURI.buildUpon().build().toString()
+            )
+
+            val userID = FirebaseAuth.getInstance().currentUser!!.uid
+            val key = database.child("pdf data").push().key.toString()
+
+            dbRef.getReference("User/$userID").child("pdf data").child(key).setValue(pdf)
             alertDialog.dismiss()
         }
     }
@@ -124,6 +175,11 @@ class DocumentListFragment : Fragment() {
             .addOnFailureListener {
                 Toast.makeText(requireContext(), "Fail", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        listData.clear()
     }
 
 }
