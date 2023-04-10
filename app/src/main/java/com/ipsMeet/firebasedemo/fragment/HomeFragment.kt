@@ -42,6 +42,8 @@ class HomeFragment : Fragment() {
         val name = view.findViewById<TextView>(R.id.homeFrag_txtName)
         val email = view.findViewById<TextView>(R.id.homeFrag_txtEmail)
         val btnViewData = view.findViewById<Button>(R.id.homeFrag_btn_basicData)
+        val btnImgData = view.findViewById<Button>(R.id.homeFrag_btn_imgData)
+        val btnPdfData = view.findViewById<Button>(R.id.homeFrag_btn_pdfData)
 
         val userID = FirebaseAuth.getInstance().currentUser!!.uid
         database.child("User").child(userID).get()
@@ -59,6 +61,21 @@ class HomeFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+
+        btnImgData.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.home_layout, ImageListFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+        /*
+        btnPdfData.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.home_layout, ListFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+        */
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
