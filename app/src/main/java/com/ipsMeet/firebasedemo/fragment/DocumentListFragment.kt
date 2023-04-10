@@ -27,6 +27,7 @@ import com.ipsMeet.firebasedemo.R
 import com.ipsMeet.firebasedemo.adapter.PdfAdapter
 import com.ipsMeet.firebasedemo.dataclass.UploadPdfDataClass
 import com.ipsMeet.firebasedemo.dataclass.ViewPdfDataClass
+import kotlinx.android.synthetic.main.popup_pdf_list.*
 import kotlinx.android.synthetic.main.popup_pdf_list.view.*
 import java.util.*
 
@@ -145,10 +146,10 @@ class DocumentListFragment : Fragment() {
 
         popupView.btnUploadPdf.setOnClickListener {
             listData.clear()
-            uploadPDF(result!!)
+            uploadPDF()
 
             val pdf = UploadPdfDataClass(
-                fileName = result.toString(),
+                fileName = popupView.pdf_name.text.toString(),
                 pdf = pdfURI.buildUpon().build().toString()
             )
 
@@ -160,13 +161,14 @@ class DocumentListFragment : Fragment() {
         }
     }
 
-    private fun uploadPDF(result: String) {
+    private fun uploadPDF() {
+        val file = popupView.pdf_name.text.toString()
         val progressDialog = ProgressDialog(requireContext())
         progressDialog.setMessage("Uploading Data...")
         progressDialog.setCancelable(false)
         progressDialog.show()
 
-        val storageReference = FirebaseStorage.getInstance().getReference("Documents/*$result")
+        val storageReference = FirebaseStorage.getInstance().getReference("Documents/*$file")
 
         storageReference.putFile(pdfURI)
             .addOnSuccessListener {
