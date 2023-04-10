@@ -133,7 +133,7 @@ class ImageListFragment : Fragment() {
 
     private fun selectImage() {
         val intent = Intent()
-        intent.type = "*/*"
+        intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
 
         startActivityForResult(intent, 100)

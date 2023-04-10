@@ -68,14 +68,13 @@ class HomeFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
-        /*
+
         btnPdfData.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.home_layout, ListFragment())
+                .replace(R.id.home_layout, DocumentListFragment())
                 .addToBackStack(null)
                 .commit()
         }
-        */
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
