@@ -3,10 +3,13 @@ package com.ipsMeet.firebasedemo.fragment
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.DownloadManager
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +47,8 @@ class DocumentListFragment : Fragment() {
     private var listData = arrayListOf<ViewPdfDataClass>()
     private lateinit var database: DatabaseReference
     private var dbRef = FirebaseDatabase.getInstance()
+
+    lateinit var pdfLink: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +80,29 @@ class DocumentListFragment : Fragment() {
                         listData.add(listedData!!)
                         Log.d("listData", listData.toString())
                         Log.d("listedData", listedData.toString())
-                        recyclerView.adapter = PdfAdapter(context!!.applicationContext, listData)
+                        recyclerView.adapter = PdfAdapter(context!!.applicationContext, listData,
+                        object : PdfAdapter.OnClickListener {
+                            override fun downloadFile(fileName: String) {
+
+                                val progressDialog = ProgressDialog(requireContext())
+                                progressDialog.setMessage("Downloading File...")
+                                progressDialog.setCancelable(false)
+                                progressDialog.show()
+
+                                val storageReference = FirebaseStorage.getInstance().reference.child("Documents/*$fileName")
+                                storageReference.downloadUrl
+                                    .addOnSuccessListener { uri: Uri ->
+                                        val url = uri.toString()
+                                        Log.d("URL", url)
+                                        downloadFile(context, fileName, "pdf", DIRECTORY_DOWNLOADS, url)
+                                        progressDialog.hide()
+                                    }
+                                    .addOnFailureListener {
+                                        progressDialog.hide()
+                                        Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                        })
                     }
                 }
             }
@@ -83,8 +111,6 @@ class DocumentListFragment : Fragment() {
                 Log.d("Error", error.toString())
             }
         })
-
-
 
         view.findViewById<FloatingActionButton>(R.id.btn_uploadPDF).setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
@@ -110,6 +136,7 @@ class DocumentListFragment : Fragment() {
         intent.type = "application/pdf"
         intent.action = Intent.ACTION_GET_CONTENT
         intent.addCategory(Intent.CATEGORY_OPENABLE)
+
         startActivityForResult(intent, 100)
     }
 
@@ -135,6 +162,7 @@ class DocumentListFragment : Fragment() {
                 }
             }
         }
+
         if (result == null) {
             result = pdfURI.path
             val cut = result!!.lastIndexOf('/')
@@ -142,6 +170,7 @@ class DocumentListFragment : Fragment() {
                 result = result!!.substring(cut + 1)
             }
         }
+
         popupView.pdf_name.setText(result.toString())
 
         popupView.btnUploadPdf.setOnClickListener {
@@ -177,6 +206,39 @@ class DocumentListFragment : Fragment() {
             .addOnFailureListener {
                 Toast.makeText(requireContext(), "Fail", Toast.LENGTH_SHORT).show()
             }
+    }
+/*
+
+    fun getFileUrl() {
+        val progressDialog = ProgressDialog(requireContext())
+        progressDialog.setMessage("Downloading File...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
+        val storageReference = FirebaseStorage.getInstance().reference.child("Documents/")
+        storageReference.downloadUrl
+            .addOnSuccessListener { uri: Uri ->
+                val url = uri.toString()
+                Log.d("URL", url)
+                downloadFile(context, pdfName, ".pdf", DIRECTORY_DOWNLOADS, url)
+                progressDialog.hide()
+            }
+            .addOnFailureListener {
+                progressDialog.hide()
+                Toast.makeText(context, "something went wrong", Toast.LENGTH_SHORT).show()
+            }
+    }
+*/
+
+    private fun downloadFile(context: Context?, fileName: String, fileExtension: String, directoryDownloads: String?, url: String) {
+        val downloadManager: DownloadManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val uri = Uri.parse(url)
+        val request: DownloadManager.Request = DownloadManager.Request(uri)
+
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        request.setDestinationInExternalFilesDir(context, directoryDownloads, fileName + fileExtension)
+
+        downloadManager.enqueue(request)
     }
 
     override fun onResume() {

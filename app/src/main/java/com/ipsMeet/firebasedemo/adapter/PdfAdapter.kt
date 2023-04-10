@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ipsMeet.firebasedemo.R
 import com.ipsMeet.firebasedemo.dataclass.ViewPdfDataClass
 
-class PdfAdapter(val context: Context, private val pdfList: List<ViewPdfDataClass>) : RecyclerView.Adapter<PdfAdapter.PdfViewHolder>() {
+class PdfAdapter(val context: Context, private val pdfList: List<ViewPdfDataClass>, val downloadPdf: OnClickListener) : RecyclerView.Adapter<PdfAdapter.PdfViewHolder>() {
 
     class PdfViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val pdfName: TextView = itemView.findViewById(R.id.single_pdf_name)
@@ -27,6 +27,15 @@ class PdfAdapter(val context: Context, private val pdfList: List<ViewPdfDataClas
     override fun onBindViewHolder(holder: PdfViewHolder, position: Int) {
         holder.apply {
             pdfName.text = pdfList[position].fileName
+
+            itemView.setOnClickListener {
+                downloadPdf.downloadFile(pdfList[position].fileName)
+            }
         }
     }
+
+    interface OnClickListener {
+        fun downloadFile(fileName: String)
+    }
+
 }
