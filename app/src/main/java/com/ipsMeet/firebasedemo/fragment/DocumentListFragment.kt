@@ -17,7 +17,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +33,6 @@ import com.ipsMeet.firebasedemo.dataclass.ViewPdfDataClass
 import kotlinx.android.synthetic.main.popup_pdf_list.*
 import kotlinx.android.synthetic.main.popup_pdf_list.view.*
 import java.util.*
-
 
 class DocumentListFragment : Fragment() {
 
@@ -74,12 +72,10 @@ class DocumentListFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     for (item in snapshot.children) {
-                        Log.d("snapshot", snapshot.children.toString())
                         val listedData = item.getValue(ViewPdfDataClass::class.java)
                         listedData?.key = item.key.toString()
                         listData.add(listedData!!)
-                        Log.d("listData", listData.toString())
-                        Log.d("listedData", listedData.toString())
+
                         recyclerView.adapter = PdfAdapter(context!!.applicationContext, listData,
                         object : PdfAdapter.OnClickListener {
                             override fun downloadFile(fileName: String) {
@@ -207,28 +203,6 @@ class DocumentListFragment : Fragment() {
                 Toast.makeText(requireContext(), "Fail", Toast.LENGTH_SHORT).show()
             }
     }
-/*
-
-    fun getFileUrl() {
-        val progressDialog = ProgressDialog(requireContext())
-        progressDialog.setMessage("Downloading File...")
-        progressDialog.setCancelable(false)
-        progressDialog.show()
-
-        val storageReference = FirebaseStorage.getInstance().reference.child("Documents/")
-        storageReference.downloadUrl
-            .addOnSuccessListener { uri: Uri ->
-                val url = uri.toString()
-                Log.d("URL", url)
-                downloadFile(context, pdfName, ".pdf", DIRECTORY_DOWNLOADS, url)
-                progressDialog.hide()
-            }
-            .addOnFailureListener {
-                progressDialog.hide()
-                Toast.makeText(context, "something went wrong", Toast.LENGTH_SHORT).show()
-            }
-    }
-*/
 
     private fun downloadFile(context: Context?, fileName: String, fileExtension: String, directoryDownloads: String?, url: String) {
         val downloadManager: DownloadManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
