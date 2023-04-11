@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 class PhoneAuthActivity : AppCompatActivity() {
 
-    lateinit var phoneNum: String
+    private lateinit var phoneNum: String
     private lateinit var auth: FirebaseAuth
 
     lateinit var storedVerificationId:String

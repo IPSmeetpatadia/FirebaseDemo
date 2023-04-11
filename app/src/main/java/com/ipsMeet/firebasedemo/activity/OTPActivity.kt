@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_otpactivity.*
 
 class OTPActivity : AppCompatActivity() {
 
-    lateinit var auth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

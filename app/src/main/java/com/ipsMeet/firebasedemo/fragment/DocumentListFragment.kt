@@ -46,8 +46,6 @@ class DocumentListFragment : Fragment() {
     private lateinit var database: DatabaseReference
     private var dbRef = FirebaseDatabase.getInstance()
 
-    lateinit var pdfLink: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -152,9 +150,9 @@ class DocumentListFragment : Fragment() {
 
         if (pdfURI.scheme.equals("content")) {
             val cursor = requireActivity().contentResolver.query(pdfURI, null, null, null, null)
-            cursor.use { cursor ->
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+            cursor.use {
+                if (it != null && it.moveToFirst()) {
+                    result = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                 }
             }
         }

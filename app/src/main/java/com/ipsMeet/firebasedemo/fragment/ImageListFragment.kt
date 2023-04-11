@@ -22,8 +22,6 @@ import com.ipsMeet.firebasedemo.R
 import com.ipsMeet.firebasedemo.adapter.ImgListAdapter
 import com.ipsMeet.firebasedemo.dataclass.ImgListDataClass
 import com.ipsMeet.firebasedemo.dataclass.ViewImgListDataClass
-import com.ipsMeet.firebasedemo.dataclass.ViewListDataClass
-import kotlinx.android.synthetic.main.popup_add_profile.*
 import kotlinx.android.synthetic.main.popup_add_profile.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,10 +29,9 @@ import java.util.*
 class ImageListFragment : Fragment() {
 
     private lateinit var popupView: View
-    lateinit var imgURI: Uri
+    private lateinit var imgURI: Uri
 
     private var listData = arrayListOf<ViewImgListDataClass>()
-    var key = ""
 
     private lateinit var database: DatabaseReference
     private var dbRef = FirebaseDatabase.getInstance()

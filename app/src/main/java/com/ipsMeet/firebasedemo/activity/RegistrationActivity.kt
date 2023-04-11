@@ -40,8 +40,8 @@ class RegistrationActivity : AppCompatActivity() {
                             val intent = Intent(this, LoginActivity::class.java)
                             startActivity(intent)
                         }
-                        ?.addOnFailureListener {
-                            Log.d("FAIL!!", it.toString())
+                        ?.addOnFailureListener { e ->
+                            Log.d("FAIL!!", e.toString())
                         }
                 }
                 else {
