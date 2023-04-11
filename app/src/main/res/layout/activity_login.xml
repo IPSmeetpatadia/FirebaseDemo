@@ -103,8 +103,19 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="15dp"
                 android:src="@drawable/icon_gmail"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_phoneNo_auth"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtOR" />
+
+            <ImageView
+                android:id="@+id/btn_phoneNo_auth"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="15dp"
+                android:src="@drawable/img_phone"
+                app:layout_constraintStart_toEndOf="@id/btn_google_login"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txtOR" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

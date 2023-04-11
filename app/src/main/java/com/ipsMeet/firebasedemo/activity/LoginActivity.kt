@@ -50,7 +50,6 @@ class LoginActivity : AppCompatActivity() {
 
             auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this) {
                 if (it.isSuccessful) {
-                    val user = auth.currentUser
                     updateUI()
                 } else {
                     Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
@@ -70,6 +69,14 @@ class LoginActivity : AppCompatActivity() {
 
         btn_google_login.setOnClickListener {
             signInWithGoogle()
+        }
+
+        /*
+            PHONE NUMBER AUTHENTICATION
+        */
+        btn_phoneNo_auth.setOnClickListener {
+            val intent = Intent(this, PhoneAuthActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -121,4 +128,5 @@ class LoginActivity : AppCompatActivity() {
             updateUI()
         }
     }
+
 }
