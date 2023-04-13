@@ -105,6 +105,7 @@ class ImageListFragment : Fragment() {
                 popupView.btnSaveProfile.setOnClickListener {
                     uploadImage()
                     listData.clear()
+
                     val profile = ImgListDataClass(
                         imgURI.buildUpon().build().toString(),
                         name.text.toString(),
@@ -163,4 +164,5 @@ class ImageListFragment : Fragment() {
                 Toast.makeText(requireContext(), "Fail", Toast.LENGTH_SHORT).show()
             }
     }
+
 }
