@@ -1,8 +1,7 @@
 package com.ipsMeet.firebasedemo.dataclass
 
-data class UserDataClass(
+data class ProfileDataClass(
     val profileImg: String?,
     val name: String,
-    val email: String,
-    val password: String
+    val email: String
 )

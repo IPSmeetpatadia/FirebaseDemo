@@ -2,30 +2,31 @@ package com.ipsMeet.firebasedemo.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.ipsMeet.firebasedemo.R
 import com.ipsMeet.firebasedemo.activity.LoginActivity
+import com.ipsMeet.firebasedemo.dataclass.ViewProfileDataClass
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
+    private lateinit var userData: ViewProfileDataClass
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
-
-        requireActivity().title = "Home"
 
         auth = FirebaseAuth.getInstance()
         database = Firebase.database.reference
@@ -46,14 +47,30 @@ class HomeFragment : Fragment() {
         val btnPdfData = view.findViewById<Button>(R.id.homeFrag_btn_pdfData)
 
         val userID = FirebaseAuth.getInstance().currentUser!!.uid
-        database.child("User").child(userID).get()
-            .addOnSuccessListener {
-                name.text = it.child("name").value.toString()
-                email.text = it.child("email").value.toString()
+        val dbRef = FirebaseDatabase.getInstance().getReference("User/$userID")
+
+        dbRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    userData = snapshot.getValue(ViewProfileDataClass::class.java)!!
+                    userData.key = snapshot.key.toString()
+
+                    name.text = userData.name
+                    email.text = userData.email
+                }
             }
-            .addOnFailureListener {
-                Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("Error ~ User Details", error.toString())
             }
+        })
+
+        homeFrag_cardView.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.home_layout, ProfileFragment(userData))
+                .addToBackStack(null)
+                .commit()
+        }
 
         btnViewData.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
@@ -92,4 +109,5 @@ class HomeFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 }

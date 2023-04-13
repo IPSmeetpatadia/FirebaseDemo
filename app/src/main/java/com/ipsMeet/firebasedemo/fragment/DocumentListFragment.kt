@@ -88,7 +88,7 @@ class DocumentListFragment : Fragment() {
                                     .addOnSuccessListener { uri: Uri ->
                                         val url = uri.toString()
                                         Log.d("URL", url)
-                                        downloadFile(context, fileName, "pdf", DIRECTORY_DOWNLOADS, url)
+                                        downloadFile(context, fileName, DIRECTORY_DOWNLOADS, url)
                                         progressDialog.hide()
                                     }
                                     .addOnFailureListener {
@@ -202,13 +202,13 @@ class DocumentListFragment : Fragment() {
             }
     }
 
-    private fun downloadFile(context: Context?, fileName: String, fileExtension: String, directoryDownloads: String?, url: String) {
+    private fun downloadFile(context: Context?, fileName: String, directoryDownloads: String?, url: String) {
         val downloadManager: DownloadManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val uri = Uri.parse(url)
         val request: DownloadManager.Request = DownloadManager.Request(uri)
 
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        request.setDestinationInExternalFilesDir(context, directoryDownloads, fileName + fileExtension)
+        request.setDestinationInExternalFilesDir(context, directoryDownloads, fileName)
 
         downloadManager.enqueue(request)
     }

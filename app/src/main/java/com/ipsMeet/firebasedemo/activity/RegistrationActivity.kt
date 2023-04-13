@@ -58,6 +58,7 @@ class RegistrationActivity : AppCompatActivity() {
 
     private fun saveUser() {
         val addUser = UserDataClass(
+            profileImg = "",
             name = reg_edtxt_name.text.toString(),
             email = reg_edtxt_email.text.toString(),
             password = reg_edtxt_password.text.toString()

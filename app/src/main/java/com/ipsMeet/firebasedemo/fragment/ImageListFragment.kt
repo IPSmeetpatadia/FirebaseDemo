@@ -98,7 +98,7 @@ class ImageListFragment : Fragment() {
                 val contact = popupView.findViewById<EditText>(R.id.profile_edtxt_phone)
                 val address = popupView.findViewById<EditText>(R.id.profile_edtxt_address)
 
-                popupView.profile_img.setOnClickListener {
+                popupView.popup_profile_img.setOnClickListener {
                     selectImage()
                 }
 
@@ -141,7 +141,7 @@ class ImageListFragment : Fragment() {
 
         if (requestCode == 100 && resultCode == RESULT_OK) {
             imgURI = data?.data!!
-            popupView.profile_img.setImageURI(imgURI)
+            popupView.popup_profile_img.setImageURI(imgURI)
             Log.d("imgURI", imgURI.toString())
         }
     }

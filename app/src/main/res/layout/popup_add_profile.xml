@@ -8,7 +8,7 @@
     android:padding="20dp">
 
     <ImageView
-        android:id="@+id/profile_img"
+        android:id="@+id/popup_profile_img"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/baseline_image_24"
